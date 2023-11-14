@@ -4,6 +4,7 @@ import Navbar from "../Navbar";
 import Sidebar from "../Sidebar";
 import Footer from "../Footer";
 import { Pagination, Spinner } from "react-bootstrap";
+import ModalCreate from "./ModalCreate";
 
 /* eslint-disable react/no-unescaped-entities */
 function Main() {
@@ -120,9 +121,7 @@ function Main() {
                   <h6 className="m-0 font-weight-bold text-primary mt-2">
                     DataTables Example
                   </h6>
-                  <button className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                    Create new data
-                  </button>
+                  <ModalCreate />
                 </div>
                 <div className="card-body">
                   <div className="d-flex justify-content-end form-inline mb-3 navbar-search">
