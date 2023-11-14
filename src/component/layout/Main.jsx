@@ -51,20 +51,24 @@ function Main() {
     setDrop(drop === "show" ? "" : "show");
   }
 
+  // this function for toggle when dimension dashboard less than 770
   function toggleWhileMinimize() {
     setToggleMin(toggleMin === "toggled-sidebar" ? "" : "toggled-sidebar");
   }
 
+  // this function for sidebar toggle
   function toggleSidebar() {
     setToggleSide(toggleSide === "toggled" ? "" : "toggled");
   }
 
+  // this function for collapse menu
   function clickCollapse() {
     setCols(cols === "collapsed" ? "" : "collapsed");
     setArias(!arias);
     setClassCols(classCols === "collapse" ? "collapse show" : "collapse");
   }
 
+  // for pagination
   const indexOfLastPage = current * dataPage;
   const indexOfFirstPage = indexOfLastPage - dataPage;
   const currentData = data.slice(indexOfFirstPage, indexOfLastPage);
@@ -75,6 +79,7 @@ function Main() {
     setCurrent(1);
   };
 
+  // for search data with live search
   const filterData = currentData.filter(
     (item) =>
       item.body.toLowerCase().includes(searchTerm.toLowerCase()) ||
