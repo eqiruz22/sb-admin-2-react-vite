@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import "../assets/app.css";
+import { Link } from "react-router-dom";
 function Sidebar(props) {
   const {
     collaps,
@@ -34,10 +35,10 @@ function Sidebar(props) {
         <hr className="sidebar-divider my-0" />
         {/* Nav Item - Dashboard */}
         <li className="nav-item">
-          <a className="nav-link" href="#">
+          <Link className="nav-link" to="/">
             <i className="fas fa-fw fa-tachometer-alt" />
             <span>Dashboard</span>
-          </a>
+          </Link>
         </li>
         {/* Divider */}
         <hr className="sidebar-divider" />
@@ -61,13 +62,13 @@ function Sidebar(props) {
             aria-labelledby="headingTwo"
             data-parent="#accordionSidebar">
             <div className="bg-white py-2 collapse-inner rounded">
-              <h6 className="collapse-header">Custom Components:</h6>
-              <a className="collapse-item" href="#">
-                Buttons
-              </a>
-              <a className="collapse-item" href="#">
+              <h6 className="collapse-header">Sub Menu :</h6>
+              <Link className="collapse-item" to="/test">
+                Task
+              </Link>
+              <Link className="collapse-item" to="/card">
                 Cards
-              </a>
+              </Link>
             </div>
           </div>
         </li>

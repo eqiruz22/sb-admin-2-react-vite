@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
-const AppContext = createContext();
+export const AppContext = createContext();
 
-export const AppProvider = ({ children }) => {
+export const AppContextProvider = ({ children }) => {
   const [navItem, setNavItem] = useState("");
   const [aria, setAria] = useState(false);
   const [drop, setDrop] = useState("");
@@ -45,16 +45,11 @@ export const AppProvider = ({ children }) => {
         arias,
         classCols,
         clickProfile,
-        toggleWhileMinimize,
-        toggleSidebar,
         clickCollapse,
+        toggleSidebar,
+        toggleWhileMinimize,
       }}>
       {children}
     </AppContext.Provider>
   );
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAppContext = () => {
-  return useContext(AppContext);
 };
