@@ -17,7 +17,12 @@ function ModalCreate() {
         Create new data
       </Button>
 
-      <Modal show={show} onHide={handleClose} backdrop="static" centered>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        size="lg"
+        centered>
         <Modal.Header>
           <Modal.Title>Create New Data</Modal.Title>
         </Modal.Header>

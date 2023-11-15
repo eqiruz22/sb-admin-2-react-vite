@@ -5,17 +5,31 @@ import Sidebar from "../Sidebar";
 import Footer from "../Footer";
 import { Pagination, Spinner } from "react-bootstrap";
 import ModalCreate from "./ModalCreate";
+import { useAppContext } from "../../context/AppContext";
 
 /* eslint-disable react/no-unescaped-entities */
 function Main() {
-  const [navItem, setNavItem] = useState("");
-  const [aria, setAria] = useState(false);
-  const [drop, setDrop] = useState("");
-  const [cols, setCols] = useState("collapsed");
-  const [arias, setArias] = useState(false);
-  const [classCols, setClassCols] = useState("collapse");
-  const [toggleSide, setToggleSide] = useState("");
-  const [toggleMin, setToggleMin] = useState("");
+  //const [navItem, setNavItem] = useState("");
+  //const [aria, setAria] = useState(false);
+  //const [drop, setDrop] = useState("");
+  //const [cols, setCols] = useState("collapsed");
+  //const [arias, setArias] = useState(false);
+  //const [classCols, setClassCols] = useState("collapse");
+  //const [toggleSide, setToggleSide] = useState("");
+  //const [toggleMin, setToggleMin] = useState("");
+  const {
+    aria,
+    cols,
+    classCols,
+    clickCollapse,
+    clickProfile,
+    toggleWhileMinimize,
+    toggleSidebar,
+    toggleMin,
+    toggleSide,
+    navItem,
+    drop,
+  } = useAppContext();
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
   const [dataPage] = useState(10);
@@ -46,28 +60,6 @@ function Main() {
   useEffect(() => {
     getApi();
   }, []);
-  function clickProfile() {
-    setNavItem(navItem === "show" ? "" : "show");
-    setAria(!aria);
-    setDrop(drop === "show" ? "" : "show");
-  }
-
-  // this function for toggle when dimension dashboard less than 770
-  function toggleWhileMinimize() {
-    setToggleMin(toggleMin === "toggled-sidebar" ? "" : "toggled-sidebar");
-  }
-
-  // this function for sidebar toggle
-  function toggleSidebar() {
-    setToggleSide(toggleSide === "toggled" ? "" : "toggled");
-  }
-
-  // this function for collapse menu
-  function clickCollapse() {
-    setCols(cols === "collapsed" ? "" : "collapsed");
-    setArias(!arias);
-    setClassCols(classCols === "collapse" ? "collapse show" : "collapse");
-  }
 
   // for pagination
   const indexOfLastPage = current * dataPage;
@@ -92,7 +84,7 @@ function Main() {
         <Sidebar
           collaps={cols}
           collapShow={classCols}
-          aria={arias}
+          aria={aria}
           buttonToggle={clickCollapse}
           toggle={toggleSide}
           iconSide={toggleSidebar}
