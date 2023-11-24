@@ -12,18 +12,21 @@ import { Outlet } from "react-router-dom";
 function Main() {
   const {
     aria,
-    cols,
-    arias,
-    classCols,
-    clickCollapse,
+    col,
+    colTwo,
+    expand,
+    toggleLinkCollapse,
     clickProfile,
     toggleWhileMinimize,
     toggleSidebar,
     toggleMin,
     toggleSide,
     navItem,
+    isDropDownOpen,
+    handleDropDownToggle,
     drop,
   } = useAppContext();
+
   // const [data, setData] = useState([]);
   // const [current, setCurrent] = useState(1);
   // const [dataPage] = useState(10);
@@ -55,7 +58,7 @@ function Main() {
   //   getApi();
   // }, []);
 
-  // // for pagination
+  // for pagination
   // const indexOfLastPage = current * dataPage;
   // const indexOfFirstPage = indexOfLastPage - dataPage;
   // const currentData = data.slice(indexOfFirstPage, indexOfLastPage);
@@ -66,7 +69,7 @@ function Main() {
   //   setCurrent(1);
   // };
 
-  // // for search data with live search
+  // for search data with live search
   // const filterData = currentData.filter(
   //   (item) =>
   //     item.body.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -76,10 +79,10 @@ function Main() {
     <>
       <div id="wrapper">
         <Sidebar
-          collaps={cols}
-          collapShow={classCols}
-          aria={aria}
-          buttonToggle={clickCollapse}
+          collaps={col}
+          collapShow={colTwo}
+          aria={expand}
+          buttonToggle={toggleLinkCollapse}
           toggle={toggleSide}
           iconSide={toggleSidebar}
           toggleMinimize={toggleMin}

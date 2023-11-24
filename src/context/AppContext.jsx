@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const AppContext = createContext();
 
@@ -12,6 +13,10 @@ export const AppContextProvider = ({ children }) => {
   const [cols, setCols] = useState("");
   const [arias, setArias] = useState(false);
   const [classCols, setClassCols] = useState("");
+  const [col, setCol] = useState("collapsed");
+  const [colTwo, setColTwo] = useState("collapse");
+  const [expand, setExpand] = useState(false);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const clickProfile = () => {
     setNavItem(navItem === "show" ? "" : "show");
@@ -26,11 +31,10 @@ export const AppContextProvider = ({ children }) => {
   const toggleSidebar = () => {
     setToggleSide(toggleSide === "toggled" ? "" : "toggled");
   };
-
-  const clickCollapse = () => {
-    setCols(cols === "collapsed" ? "" : "collapsed");
-    setArias(!arias);
-    setClassCols(classCols === "collapse" ? "collapse show" : "collapse");
+  const toggleLinkCollapse = () => {
+    setCol(col === "collapsed" ? "" : "collapsed");
+    setColTwo(colTwo === "collapse" ? "collapse show" : "collapse");
+    setExpand(true);
   };
 
   return (
@@ -41,11 +45,13 @@ export const AppContextProvider = ({ children }) => {
         drop,
         toggleMin,
         toggleSide,
-        cols,
+        col,
+        colTwo,
+        expand,
         arias,
         classCols,
         clickProfile,
-        clickCollapse,
+        toggleLinkCollapse,
         toggleSidebar,
         toggleWhileMinimize,
       }}>

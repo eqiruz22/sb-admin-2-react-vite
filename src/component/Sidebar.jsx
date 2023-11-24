@@ -63,8 +63,8 @@ function Sidebar(props) {
             data-parent="#accordionSidebar">
             <div className="bg-white py-2 collapse-inner rounded">
               <h6 className="collapse-header">Sub Menu :</h6>
-              <Link className="collapse-item" to="/test">
-                Task
+              <Link className="collapse-item" to="/user">
+                User
               </Link>
               <Link className="collapse-item" to="/card">
                 Cards

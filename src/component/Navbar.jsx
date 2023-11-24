@@ -1,13 +1,12 @@
+/* eslint-disable react/prop-types */
 import Logout from "./modal/Logout";
 
-/* eslint-disable react/prop-types */
 function Navbar(props) {
   const { navItem, ariaToggle, dropDownToggle, toggleButton, toggleMinimize } =
     props;
   return (
     <>
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-        {/* Sidebar Toggle (Topbar) */}
         <div className="form-inline">
           <button
             id="sidebarToggleTop"
@@ -16,10 +15,8 @@ function Navbar(props) {
             <i className="fa fa-bars" />
           </button>
         </div>
-        {/* Topbar Navbar */}
         <ul className="navbar-nav ml-auto">
           <div className="topbar-divider d-none d-sm-block" />
-          {/* Nav Item - User Information */}
           <li className={`nav-item dropdown no-arrow ${navItem}`}>
             <a
               className="nav-link dropdown-toggle"
@@ -38,7 +35,6 @@ function Navbar(props) {
                 src="img/undraw_profile.svg"
               />
             </a>
-            {/* Dropdown - User Information */}
             <div
               className={`dropdown-menu dropdown-menu-right shadow animated--grow-in ${dropDownToggle}`}
               aria-labelledby="userDropdown">

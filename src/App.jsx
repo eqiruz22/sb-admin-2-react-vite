@@ -1,6 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Main from "./component/layout/Main";
 import Dashboard from "./component/layout/Dashboard";
+import MainUser from "./component/layout/user/Main";
 
 function App() {
   const router = createBrowserRouter([
@@ -13,12 +14,8 @@ function App() {
           element: <Dashboard />,
         },
         {
-          path: "/test",
-          element: (
-            <>
-              <h1>Test lah</h1>
-            </>
-          ),
+          path: "/user",
+          element: <MainUser />,
         },
       ],
     },
