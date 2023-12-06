@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Main from "./component/layout/Main";
 import Dashboard from "./component/layout/Dashboard";
 import MainUser from "./component/layout/user/Main";
+import Login from "./component/layout/login/Login";
 
 function App() {
   const router = createBrowserRouter([
@@ -26,6 +27,10 @@ function App() {
           <h1>Not Found...</h1>
         </div>
       ),
+    },
+    {
+      path: "/login",
+      element: <Login />,
     },
   ]);
 
