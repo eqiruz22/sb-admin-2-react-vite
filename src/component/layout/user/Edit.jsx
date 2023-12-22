@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
 
-function ModalCreate(props) {
+function ModalEdit(props) {
   const {
+    isId,
     page,
     size,
     search,
@@ -17,34 +19,56 @@ function ModalCreate(props) {
     setCountData,
   } = props;
   const [show, setShow] = useState(false);
-
+  const [username, setUsername] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [role, setRole] = useState("");
   const handleClose = () => setShow(false);
+
+  const getDetail = async () => {
+    try {
+      const res = await fetch(`http://127.0.0.1:4000/user/${isId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const response = await res.json();
+      if (res.ok) {
+        console.log(response);
+        setUsername(response?.result["username"]);
+        setFullname(response?.result["full_name"]);
+        setRole(response?.result["role"]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleOpen = () => {
     setShow(true);
+    getDetail();
   };
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      username: "",
+      username: username,
       password: "",
-      fullname: "",
-      role: "",
+      fullname: fullname,
+      role: role,
     },
     validationSchema: Yup.object({
       username: Yup.string()
         .min(5, "Username must be 5 characters")
         .required("Username field is required"),
-      password: Yup.string()
-        .min(5, "Password must be 5 characters")
-        .required("Password field is required"),
+      password: Yup.string().min(5, "Password must be 5 characters"),
       fullname: Yup.string().required("Full Name field is required"),
     }),
-    onSubmit: async (value, { resetForm }) => {
+    onSubmit: async (value) => {
       console.log(value);
       try {
-        const res = await fetch("http://127.0.0.1:4000/user", {
-          method: "POST",
+        const res = await fetch(`http://127.0.0.1:4000/user/${isId}`, {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
@@ -58,7 +82,6 @@ function ModalCreate(props) {
         const response = await res.json();
         if (res.ok) {
           console.log(response);
-          resetForm();
           await fetch(
             `http://127.0.0.1:4000/user?page=${page}&size=${size}&query=${search}`,
             {
@@ -90,10 +113,8 @@ function ModalCreate(props) {
   });
   return (
     <>
-      <Button
-        onClick={handleOpen}
-        className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-        Create new data
+      <Button onClick={handleOpen} className="btn btn-sm btn-warning">
+        <i className="fas fa-fw fa-edit"></i>
       </Button>
 
       <Modal
@@ -103,7 +124,7 @@ function ModalCreate(props) {
         size="lg"
         centered>
         <Modal.Header>
-          <Modal.Title>Create New Data</Modal.Title>
+          <Modal.Title>Edit User</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit}>
           <Modal.Body>
@@ -202,4 +223,4 @@ function ModalCreate(props) {
   );
 }
 
-export default ModalCreate;
+export default ModalEdit;

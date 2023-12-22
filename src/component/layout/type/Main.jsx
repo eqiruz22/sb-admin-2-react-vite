@@ -6,10 +6,10 @@ import ModalCreate from "./Create";
 import ReactPaginate from "react-paginate";
 import { formatDate } from "../../../helper/formatDate";
 import debounce from "lodash/debounce";
-import ModalEdit from "./Edit";
 import "../../../../style/styles.css";
 import ModalDelete from "./Delete";
-const MainUser = () => {
+import ModalEdit from "./Edit";
+const MainType = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -25,7 +25,7 @@ const MainUser = () => {
     setLoading(true);
     try {
       const api = await fetch(
-        `http://127.0.0.1:4000/user?page=${page}&size=${size}&query=${searchTerm}`,
+        `http://127.0.0.1:4000/type?page=${page}&size=${size}&query=${searchTerm}`,
         {
           method: "GET",
           headers: {
@@ -39,7 +39,7 @@ const MainUser = () => {
         setPage(response.result.paginate["page"]);
         setSize(response.result.paginate["pageSize"]);
         setPages(response.result.paginate["totalPage"]);
-        setCountData(response.result.paginate["userCount"]);
+        setCountData(response.result.paginate["typeCount"]);
         setLoading(false);
       }
     } catch (error) {
@@ -57,18 +57,16 @@ const MainUser = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filterData = data.filter(
-    (item) =>
-      item.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filterData = data.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
     <>
-      <h1 className="h3 mb-2 text-gray-800">User</h1>
+      <h1 className="h3 mb-2 text-gray-800">Type</h1>
       <div className="card shadow mb-4">
         <div className="card-header py-3 d-flex justify-content-between">
           <h6 className="m-0 font-weight-bold text-primary mt-2">
-            DataTables Users
+            DataTables Type
           </h6>
           <ModalCreate
             page={page}
@@ -101,9 +99,7 @@ const MainUser = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Username</th>
-                  <th>Fullname</th>
-                  <th>Role</th>
+                  <th>Name</th>
                   <th>Created At</th>
                   <th>Updated At</th>
                   <th>Action</th>
@@ -113,7 +109,7 @@ const MainUser = () => {
                 {loading ? (
                   <>
                     <tr>
-                      <td className="text-center" colSpan={7}>
+                      <td className="text-center" colSpan={5}>
                         <Spinner animation="grow" role="status"></Spinner>
                       </td>
                     </tr>
@@ -124,9 +120,7 @@ const MainUser = () => {
                       filterData.map((item, index) => (
                         <tr key={index * 2}>
                           <td>{index + 1}</td>
-                          <td>{item.username}</td>
-                          <td>{item.full_name}</td>
-                          <td>{item.role}</td>
+                          <td>{item.name}</td>
                           <td>{formatDate(item.createdAt)}</td>
                           <td>{formatDate(item.updatedAt)}</td>
                           <td>
@@ -157,7 +151,7 @@ const MainUser = () => {
                       ))
                     ) : (
                       <tr>
-                        <td className="text-center" colSpan={7}>
+                        <td className="text-center" colSpan={5}>
                           No data found...
                         </td>
                       </tr>
@@ -167,7 +161,7 @@ const MainUser = () => {
               </tbody>
             </table>
             <div className="d-sm-flex align-items-center justify-content-between">
-              <p>Total User : {countData}</p>
+              <p>Total type : {countData}</p>
               <nav aria-label="Page navigation example" key={countData}>
                 <ReactPaginate
                   previousLabel={"<<"}
@@ -191,4 +185,4 @@ const MainUser = () => {
   );
 };
 
-export default MainUser;
+export default MainType;

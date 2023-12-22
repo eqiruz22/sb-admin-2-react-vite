@@ -1,15 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Spinner } from "react-bootstrap";
-import ModalCreate from "./Create";
+import { Spinner, Button } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { formatDate } from "../../../helper/formatDate";
 import debounce from "lodash/debounce";
-import ModalEdit from "./Edit";
+import { Link } from "react-router-dom";
 import "../../../../style/styles.css";
 import ModalDelete from "./Delete";
-const MainUser = () => {
+const MainAsset = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -25,7 +24,7 @@ const MainUser = () => {
     setLoading(true);
     try {
       const api = await fetch(
-        `http://127.0.0.1:4000/user?page=${page}&size=${size}&query=${searchTerm}`,
+        `http://127.0.0.1:4000/asset?page=${page}&size=${size}&query=${searchTerm}`,
         {
           method: "GET",
           headers: {
@@ -39,7 +38,7 @@ const MainUser = () => {
         setPage(response.result.paginate["page"]);
         setSize(response.result.paginate["pageSize"]);
         setPages(response.result.paginate["totalPage"]);
-        setCountData(response.result.paginate["userCount"]);
+        setCountData(response.result.paginate["assetCount"]);
         setLoading(false);
       }
     } catch (error) {
@@ -59,27 +58,26 @@ const MainUser = () => {
 
   const filterData = data.filter(
     (item) =>
-      item.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+      item.employee.full_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      item.product.serial_number
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
   );
   return (
     <>
-      <h1 className="h3 mb-2 text-gray-800">User</h1>
+      <h1 className="h3 mb-2 text-gray-800">Asset</h1>
       <div className="card shadow mb-4">
         <div className="card-header py-3 d-flex justify-content-between">
           <h6 className="m-0 font-weight-bold text-primary mt-2">
-            DataTables Users
+            DataTables Asset
           </h6>
-          <ModalCreate
-            page={page}
-            size={size}
-            search={searchTerm}
-            setData={setData}
-            setPage={setPage}
-            setSize={setSize}
-            setPages={setPages}
-            setCountData={setCountData}
-          />
+          <Link to="/asset/create">
+            <Button className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+              <i className="fas fa-fw fa-plus"></i>
+            </Button>
+          </Link>
         </div>
         <div className="card-body">
           <div className="d-flex justify-content-end form-inline mb-3 navbar-search">
@@ -101,11 +99,10 @@ const MainUser = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Username</th>
-                  <th>Fullname</th>
-                  <th>Role</th>
-                  <th>Created At</th>
-                  <th>Updated At</th>
+                  <th>Name</th>
+                  <th>Asset Name</th>
+                  <th>Location</th>
+                  <th>Tag id</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -124,23 +121,16 @@ const MainUser = () => {
                       filterData.map((item, index) => (
                         <tr key={index * 2}>
                           <td>{index + 1}</td>
-                          <td>{item.username}</td>
-                          <td>{item.full_name}</td>
-                          <td>{item.role}</td>
-                          <td>{formatDate(item.createdAt)}</td>
-                          <td>{formatDate(item.updatedAt)}</td>
+                          <td>{item.employee && item.employee.full_name}</td>
+                          <td>{item.product && item.product.product_name}</td>
+                          <td>{item.location}</td>
+                          <td>{item.tag_id}</td>
                           <td>
-                            <ModalEdit
-                              isId={item.id}
-                              page={page}
-                              size={size}
-                              search={searchTerm}
-                              setData={setData}
-                              setPage={setPage}
-                              setSize={setSize}
-                              setPages={setPages}
-                              setCountData={setCountData}
-                            />
+                            <Link to={`/asset/edit/${item.id}`}>
+                              <Button className="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
+                                <i className="fas fa-fw fa-edit"></i>
+                              </Button>
+                            </Link>
                             <ModalDelete
                               isId={item.id}
                               page={page}
@@ -167,7 +157,7 @@ const MainUser = () => {
               </tbody>
             </table>
             <div className="d-sm-flex align-items-center justify-content-between">
-              <p>Total User : {countData}</p>
+              <p>Total Asset : {countData}</p>
               <nav aria-label="Page navigation example" key={countData}>
                 <ReactPaginate
                   previousLabel={"<<"}
@@ -191,4 +181,4 @@ const MainUser = () => {
   );
 };
 
-export default MainUser;
+export default MainAsset;

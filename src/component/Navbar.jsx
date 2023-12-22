@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import Logout from "./modal/Logout";
-
+import imgProfile from "/img/undraw_profile.svg";
 function Navbar(props) {
   const { navItem, ariaToggle, dropDownToggle, toggleButton, toggleMinimize } =
     props;
@@ -30,10 +30,7 @@ function Navbar(props) {
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">
                 Douglas McGee
               </span>
-              <img
-                className="img-profile rounded-circle"
-                src="img/undraw_profile.svg"
-              />
+              <img className="img-profile rounded-circle" src={imgProfile} />
             </a>
             <div
               className={`dropdown-menu dropdown-menu-right shadow animated--grow-in ${dropDownToggle}`}

@@ -1,10 +1,21 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
 
-function ModalEdit() {
+function ModalCreate(props) {
+  const {
+    page,
+    size,
+    search,
+    setData,
+    setPage,
+    setSize,
+    setPages,
+    setCountData,
+  } = props;
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -48,6 +59,23 @@ function ModalEdit() {
         if (res.ok) {
           console.log(response);
           resetForm();
+          await fetch(
+            `http://127.0.0.1:4000/user?page=${page}&size=${size}&query=${search}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((res) => {
+              setData(res.result.data);
+              setPage(res.result.paginate["page"]);
+              setSize(res.result.paginate["pageSize"]);
+              setPages(res.result.paginate["totalPage"]);
+              setCountData(res.result.paginate["userCount"]);
+            });
           setShow(false);
           Swal.fire({
             title: "Success",
@@ -62,9 +90,11 @@ function ModalEdit() {
   });
   return (
     <>
-      <span onClick={handleOpen} className="badge badge-warning" role="button">
-        Edit
-      </span>
+      <Button
+        onClick={handleOpen}
+        className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i className="fas fa-fw fa-plus"></i>
+      </Button>
 
       <Modal
         show={show}
@@ -73,7 +103,7 @@ function ModalEdit() {
         size="lg"
         centered>
         <Modal.Header>
-          <Modal.Title>Edit User</Modal.Title>
+          <Modal.Title>Create New Data</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit}>
           <Modal.Body>
@@ -172,4 +202,4 @@ function ModalEdit() {
   );
 }
 
-export default ModalEdit;
+export default ModalCreate;

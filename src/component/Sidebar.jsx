@@ -66,11 +66,26 @@ function Sidebar(props) {
               <Link className="collapse-item" to="/user">
                 User
               </Link>
-              <Link className="collapse-item" to="/card">
-                Cards
+              <Link className="collapse-item" to="/manufacture">
+                Manufacture
+              </Link>
+              <Link className="collapse-item" to="/type">
+                Type Product
+              </Link>
+              <Link className="collapse-item" to="/product">
+                Product
+              </Link>
+              <Link className="collapse-item" to="/asset">
+                Asset
               </Link>
             </div>
           </div>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/employee">
+            <i className="fas fa-fw fa-solid fa-user-tie" />
+            <span>Employee</span>
+          </Link>
         </li>
         {/* Divider */}
         <hr className="sidebar-divider d-none d-md-block" />
