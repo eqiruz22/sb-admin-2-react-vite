@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
+import useAuthContext from "./hooks/useAuthContext";
 import Logout from "./modal/Logout";
 import imgProfile from "/img/undraw_profile.svg";
 function Navbar(props) {
   const { navItem, ariaToggle, dropDownToggle, toggleButton, toggleMinimize } =
     props;
+  const { user } = useAuthContext();
   return (
     <>
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -28,7 +30,7 @@ function Navbar(props) {
               aria-haspopup="true"
               aria-expanded={`${ariaToggle}`}>
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                Douglas McGee
+                {user.full_name}
               </span>
               <img className="img-profile rounded-circle" src={imgProfile} />
             </a>

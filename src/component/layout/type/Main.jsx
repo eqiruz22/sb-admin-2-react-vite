@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import { useEffect, useCallback, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import ModalCreate from "./Create";
 import ReactPaginate from "react-paginate";
@@ -9,19 +9,21 @@ import debounce from "lodash/debounce";
 import "../../../../style/styles.css";
 import ModalDelete from "./Delete";
 import ModalEdit from "./Edit";
+import useAuthContext from "../../hooks/useAuthContext";
 const MainType = () => {
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [page, setPage] = React.useState(1);
-  const [pages, setPages] = React.useState(0);
-  const [size, setSize] = React.useState(10);
-  const [countData, setCountData] = React.useState(0);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(0);
+  const [size, setSize] = useState(10);
+  const [countData, setCountData] = useState(0);
+  const { user } = useAuthContext();
 
-  React.useEffect(() => {
+  useEffect(() => {
     debounceApi();
   }, [page, size, searchTerm]);
-  const getApi = React.useCallback(async () => {
+  const getApi = useCallback(async () => {
     setLoading(true);
     try {
       const api = await fetch(
@@ -30,6 +32,9 @@ const MainType = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -49,6 +54,9 @@ const MainType = () => {
 
   const debounceApi = debounce(getApi, 200);
 
+  if (!user) {
+    return null;
+  }
   const changePage = ({ selected }) => {
     setPage(selected + 1);
   };

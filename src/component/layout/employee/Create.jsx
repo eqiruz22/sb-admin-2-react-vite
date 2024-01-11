@@ -42,6 +42,9 @@ const CreateEmployee = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
           body: JSON.stringify(data),
         });
@@ -74,6 +77,9 @@ const CreateEmployee = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         });
         const response = await res.json();
@@ -98,6 +104,9 @@ const CreateEmployee = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         });
         const response = await res.json();
@@ -122,6 +131,9 @@ const CreateEmployee = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         });
         const response = await res.json();

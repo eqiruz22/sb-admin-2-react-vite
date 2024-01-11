@@ -30,6 +30,7 @@ function ModalEdit(props) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
         },
       });
       const response = await res.json();
@@ -65,12 +66,14 @@ function ModalEdit(props) {
       fullname: Yup.string().required("Full Name field is required"),
     }),
     onSubmit: async (value) => {
-      console.log(value);
       try {
         const res = await fetch(`http://127.0.0.1:4000/user/${isId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
           body: JSON.stringify({
             username: value["username"],
@@ -88,6 +91,9 @@ function ModalEdit(props) {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(
+                  localStorage.getItem("token")
+                )}`,
               },
             }
           )

@@ -28,6 +28,7 @@ function ModalEdit(props) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
         },
       });
       const response = await res.json();
@@ -60,6 +61,9 @@ function ModalEdit(props) {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
           body: JSON.stringify({
             name: value["manufacture"],
@@ -74,6 +78,9 @@ function ModalEdit(props) {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(
+                  localStorage.getItem("token")
+                )}`,
               },
             }
           )

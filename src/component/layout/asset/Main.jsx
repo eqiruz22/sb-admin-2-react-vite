@@ -8,6 +8,7 @@ import debounce from "lodash/debounce";
 import { Link } from "react-router-dom";
 import "../../../../style/styles.css";
 import ModalDelete from "./Delete";
+import ModalDetail from "./ModalDetail";
 const MainAsset = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -29,6 +30,9 @@ const MainAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -74,7 +78,9 @@ const MainAsset = () => {
             DataTables Asset
           </h6>
           <Link to="/asset/create">
-            <Button className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <Button
+              title="Create Asset"
+              className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
               <i className="fas fa-fw fa-plus"></i>
             </Button>
           </Link>
@@ -127,7 +133,9 @@ const MainAsset = () => {
                           <td>{item.tag_id}</td>
                           <td>
                             <Link to={`/asset/edit/${item.id}`}>
-                              <Button className="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
+                              <Button
+                                title="Edit Asset"
+                                className="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
                                 <i className="fas fa-fw fa-edit"></i>
                               </Button>
                             </Link>
@@ -142,6 +150,7 @@ const MainAsset = () => {
                               setPages={setPages}
                               setCountData={setCountData}
                             />
+                            <ModalDetail id={item.id} />
                           </td>
                         </tr>
                       ))

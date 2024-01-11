@@ -10,8 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@mdx-js/rollup": "^3.0.0",
+    "@mui/material": "^5.15.2",
     "bootstrap": "^4.6.0",
+    "bs-stepper": "^1.7.0",
     "formik": "^2.4.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

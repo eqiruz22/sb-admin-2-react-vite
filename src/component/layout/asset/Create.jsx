@@ -2,20 +2,18 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import CreatableSelect from "react-select/creatable";
 import AsyncSelect from "react-select/async";
+import AsyncCreatableSelect from "react-select/async-creatable";
 import { useEffect, useState } from "react";
 const CreateAsset = () => {
   const navigate = useNavigate();
-  const [tag, setTag] = useState(null);
-  const [tagOpt, setTagOpt] = useState([]);
   const [employee, setEmployee] = useState("");
   const [product, setProduct] = useState("");
   const [spec, setSpec] = useState("");
   const [sn, setSn] = useState("");
   const [manufac, setManufac] = useState("");
   const [type, setType] = useState("");
-
+  const [tagId, setTagId] = useState("");
   let page = 1;
   let limit = 10;
   const formik = useFormik({
@@ -30,19 +28,23 @@ const CreateAsset = () => {
         employeeId: employee["value"],
         productId: product["value"],
         location: value["location"],
-        tag_id: tag["value"],
+        tag_id: tagId["label"],
+        used_by: employee["label"],
+        userId: 1,
       };
       try {
         const res = await fetch(`http://127.0.0.1:4000/asset`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
           body: JSON.stringify(data),
         });
         const response = await res.json();
         if (res.status === 200) {
-          console.log(response);
           Swal.fire({
             title: "success",
             text: response.result,
@@ -70,6 +72,9 @@ const CreateAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -82,7 +87,39 @@ const CreateAsset = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(opt);
-          }, 3000);
+          }, 2000);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  const fetchTag = async (value) => {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:4000/asset-fetch?page=${page}&size=${limit}&query=${value}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
+          },
+        }
+      );
+      const response = await res.json();
+      if (res.ok) {
+        const opt = response.result.data.map((item) => ({
+          value: item.id,
+          label: item.tag_id,
+        }));
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(opt);
+          }, 2000);
         });
       }
     } catch (error) {
@@ -99,12 +136,14 @@ const CreateAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
       const response = await res.json();
       if (res.ok) {
-        console.log(response);
         const opt = response.result.data.map((item) => ({
           value: item.id,
           label: item.product_name,
@@ -112,7 +151,7 @@ const CreateAsset = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(opt);
-          }, 3000);
+          }, 2000);
         });
       }
     } catch (error) {
@@ -130,16 +169,18 @@ const CreateAsset = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("token")
+              )}`,
             },
           }
         );
         const response = await res.json();
         if (res.ok) {
-          console.log(response);
-          setSpec(response?.result?.spesification);
-          setSn(response?.result?.serial_number);
-          setManufac(response?.result?.manufacture?.name);
-          setType(response?.result?.type?.name);
+          setSpec(response?.result?.data?.spesification);
+          setSn(response?.result?.data?.serial_number);
+          setManufac(response?.result?.data?.manufacture?.name);
+          setType(response?.result?.data?.type?.name);
         }
       } catch (error) {
         console.log(error);
@@ -149,29 +190,6 @@ const CreateAsset = () => {
       detailProduct();
     }
   }, [product]);
-  useEffect(() => {
-    const getBussines = async () => {
-      try {
-        const res = await fetch(`http://127.0.0.1:4000/asset-tag`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const response = await res.json();
-        if (res.ok) {
-          const opt = response.result.map((item) => ({
-            value: item.tag_id,
-            label: item.tag_id,
-          }));
-          setTagOpt(opt);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getBussines();
-  }, []);
 
   return (
     <div>
@@ -198,6 +216,18 @@ const CreateAsset = () => {
               loadOptions={getProduct}
               value={product}
               onChange={(options) => setProduct(options)}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <div className="mb-3">
+            <label htmlFor="tag">Tag ID</label>
+            <AsyncCreatableSelect
+              defaultOptions
+              cacheOptions
+              loadOptions={fetchTag}
+              value={tagId}
+              onChange={(value) => setTagId(value)}
             />
           </div>
         </div>
@@ -247,18 +277,6 @@ const CreateAsset = () => {
             ) : formik.touched.location ? (
               <span className="mb-1 valid-feedback">Looks good!</span>
             ) : null}
-          </div>
-        </div>
-        <div className="form-group">
-          <div className="mb-3">
-            <label htmlFor="tag">Tag ID</label>
-            <CreatableSelect
-              isClearable
-              options={tagOpt}
-              value={tag}
-              onChange={(value) => setTag(value)}
-              id="tag"
-            />
           </div>
         </div>
         <button type="submit" className="btn btn-primary">

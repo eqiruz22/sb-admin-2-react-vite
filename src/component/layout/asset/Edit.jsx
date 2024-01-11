@@ -35,12 +35,17 @@ const EditAsset = () => {
         productId: product["value"],
         location: value["location"],
         tag_id: tag["value"],
+        used_by: employee["label"],
+        userId: 1,
       };
       try {
         const res = await fetch(`http://127.0.0.1:4000/asset/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
           body: JSON.stringify(data),
         });
@@ -75,6 +80,9 @@ const EditAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -87,7 +95,7 @@ const EditAsset = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(opt);
-          }, 3000);
+          }, 2000);
         });
       }
     } catch (error) {
@@ -104,6 +112,9 @@ const EditAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -116,7 +127,7 @@ const EditAsset = () => {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(opt);
-          }, 3000);
+          }, 2000);
         });
       }
     } catch (error) {
@@ -134,15 +145,19 @@ const EditAsset = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("token")
+              )}`,
             },
           }
         );
         const response = await res.json();
         if (res.ok) {
-          setSpec(response?.result?.spesification);
-          setSn(response?.result?.serial_number);
-          setManufac(response?.result?.manufacture?.name);
-          setType(response?.result?.type?.name);
+          console.log(response);
+          setSpec(response?.result?.data?.spesification);
+          setSn(response?.result?.data?.serial_number);
+          setManufac(response?.result?.data?.manufacture?.name);
+          setType(response?.result?.data.type?.name);
         }
       } catch (error) {
         console.log(error);
@@ -159,6 +174,9 @@ const EditAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         });
         const response = await res.json();
@@ -183,6 +201,9 @@ const EditAsset = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         });
         const response = await res.json();

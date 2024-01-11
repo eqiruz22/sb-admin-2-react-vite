@@ -32,6 +32,9 @@ function ModalDelete(props) {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("token")
+              )}`,
             },
           });
           const response = await res.json();
@@ -42,6 +45,9 @@ function ModalDelete(props) {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
+                  Authorization: `Bearer ${JSON.parse(
+                    localStorage.getItem("token")
+                  )}`,
                 },
               }
             )

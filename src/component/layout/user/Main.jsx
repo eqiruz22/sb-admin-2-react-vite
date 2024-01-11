@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Spinner } from "react-bootstrap";
 import ModalCreate from "./Create";
 import ReactPaginate from "react-paginate";
@@ -9,19 +9,22 @@ import debounce from "lodash/debounce";
 import ModalEdit from "./Edit";
 import "../../../../style/styles.css";
 import ModalDelete from "./Delete";
+import useAuthContext from "../../hooks/useAuthContext";
 const MainUser = () => {
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [page, setPage] = React.useState(1);
-  const [pages, setPages] = React.useState(0);
-  const [size, setSize] = React.useState(10);
-  const [countData, setCountData] = React.useState(0);
-
-  React.useEffect(() => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(0);
+  const [size, setSize] = useState(10);
+  const [countData, setCountData] = useState(0);
+  const { user } = useAuthContext();
+  const tokens = JSON.parse(localStorage.getItem("token"));
+  useEffect(() => {
     debounceApi();
-  }, [page, size, searchTerm]);
-  const getApi = React.useCallback(async () => {
+  }, [page, size, searchTerm, tokens]);
+
+  const getApi = useCallback(async () => {
     setLoading(true);
     try {
       const api = await fetch(
@@ -30,24 +33,30 @@ const MainUser = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${tokens}`,
           },
         }
       );
+      const response = await api.json();
       if (api.ok) {
-        const response = await api.json();
         setData(response.result.data);
         setPage(response.result.paginate["page"]);
         setSize(response.result.paginate["pageSize"]);
         setPages(response.result.paginate["totalPage"]);
         setCountData(response.result.paginate["userCount"]);
         setLoading(false);
+      } else {
+        throw new Error(response);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [page, size, searchTerm]);
+  }, [page, size, searchTerm, tokens]);
 
   const debounceApi = debounce(getApi, 200);
+  if (!user) {
+    return null;
+  }
 
   const changePage = ({ selected }) => {
     setPage(selected + 1);
@@ -62,6 +71,7 @@ const MainUser = () => {
       item.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.full_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   return (
     <>
       <h1 className="h3 mb-2 text-gray-800">User</h1>

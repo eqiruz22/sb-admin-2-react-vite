@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import { useCallback, useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
+import Select from "react-select";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -15,6 +16,8 @@ const EditProduct = () => {
   const [name, setName] = useState("");
   const [spec, setSpec] = useState("");
   const [warranty, setWarranty] = useState("");
+  const [opt, setOpt] = useState([]);
+  const [stats, setStats] = useState("");
   const [buy, setBuy] = useState("");
   const { id } = useParams();
   let page = 1;
@@ -26,25 +29,36 @@ const EditProduct = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
         },
       });
       const response = await res.json();
       if (res.ok) {
         console.log(response);
-        setSn(response.result.serial_number);
-        setHost(response.result.hostname);
-        setSpec(response.result.spesification);
-        setName(response.result.product_name);
+        setSn(response.result.data.serial_number);
+        setHost(response.result.data.hostname);
+        setSpec(response.result.data.spesification);
+        setName(response.result.data.product_name);
         setManufac({
-          value: response.result.manufactureId,
-          label: response.result.manufacture.name,
+          value: response.result.data.manufactureId,
+          label: response.result.data.manufacture.name,
         });
         setType({
-          value: response.result.typeId,
-          label: response.result.type.name,
+          value: response.result.data.typeId,
+          label: response.result.data.type.name,
         });
-        setWarranty(formatOnlyDate(response.result.warranty));
-        setBuy(formatOnlyDate(response.result.buy_date));
+        setStats({
+          value: response.result.data.statsId,
+          label: response.result.data.statsasset.name,
+        });
+        setOpt(
+          response.result.stats.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }))
+        );
+        setWarranty(formatOnlyDate(response.result.data.warranty));
+        setBuy(formatOnlyDate(response.result.data.buy_date));
       }
     } catch (error) {
       console.log(error);
@@ -86,6 +100,9 @@ const EditProduct = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
           body: JSON.stringify(data),
         });
@@ -118,6 +135,9 @@ const EditProduct = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -148,6 +168,9 @@ const EditProduct = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
           },
         }
       );
@@ -277,6 +300,16 @@ const EditProduct = () => {
               loadOptions={getManufacture}
               value={manufac}
               onChange={(options) => setManufac(options)}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <div className="mb-3">
+            <label htmlFor="status">Status</label>
+            <Select
+              options={opt}
+              value={stats}
+              onChange={(options) => setStats(options)}
             />
           </div>
         </div>

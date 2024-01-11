@@ -14,6 +14,7 @@ function ModalDetail(props) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
         },
       });
       const response = await res.json();

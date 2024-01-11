@@ -32,6 +32,12 @@ function ModalDelete(props) {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("token")
+              )}`,
+            },
+            body: {
+              userId: 1,
             },
           });
           const response = await res.json();
@@ -42,6 +48,9 @@ function ModalDelete(props) {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
+                  Authorization: `Bearer ${JSON.parse(
+                    localStorage.getItem("token")
+                  )}`,
                 },
               }
             )
@@ -53,12 +62,18 @@ function ModalDelete(props) {
                 setPages(res.result.paginate["totalPage"]);
                 setCountData(res.result.paginate["assetCount"]);
               });
+            Swal.fire({
+              title: "Deleted!",
+              text: response.result,
+              icon: "success",
+            });
+          } else {
+            Swal.fire({
+              title: "Something wrong?",
+              text: response.result,
+              icon: "question",
+            });
           }
-          Swal.fire({
-            title: "Deleted!",
-            text: response.result,
-            icon: "success",
-          });
         } catch (error) {
           console.log(error);
         }
@@ -68,7 +83,10 @@ function ModalDelete(props) {
 
   return (
     <>
-      <Button onClick={handleDelete} className="btn btn-sm btn-danger ml-1">
+      <Button
+        onClick={handleDelete}
+        title="Delete Asset"
+        className="btn btn-sm btn-danger ml-1">
         <i className="fas fa-fw fa-trash"></i>
       </Button>
     </>

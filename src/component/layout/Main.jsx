@@ -3,7 +3,7 @@ import Navbar from "../Navbar";
 import Sidebar from "../Sidebar";
 import Footer from "../Footer";
 
-import { useAppContext } from "../../context/useAppContext";
+import { useAppContext } from "../hooks/useAppContext";
 import { Outlet } from "react-router-dom";
 
 /* eslint-disable react/no-unescaped-entities */
