@@ -2,20 +2,19 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import CreatableSelect from "react-select/creatable";
+import AsyncCreatableSelect from "react-select/async-creatable";
 import { useEffect, useState } from "react";
+import useAuthContext from "../../hooks/useAuthContext";
 const EditEmployee = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState(null);
-  const [titleOpt, setTitleOpt] = useState([]);
   const [department, setDepartment] = useState(null);
-  const [departOpt, setDepartOpt] = useState([]);
   const [bussines, setBussines] = useState(null);
-  const [bussinesOpt, setBussinesOpt] = useState([]);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [nik, setNik] = useState("");
   const { id } = useParams();
+  const { user, token } = useAuthContext();
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -41,21 +40,20 @@ const EditEmployee = () => {
         title: title["value"],
         department: department["value"],
         bussines_unit: bussines["value"],
+        userId: user.id,
       };
       try {
         const res = await fetch(`http://127.0.0.1:4000/employee/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         });
         const response = await res.json();
+        console.log(res);
         if (res.ok) {
-          console.log(response);
           Swal.fire({
             title: "success",
             text: response.result,
@@ -89,7 +87,6 @@ const EditEmployee = () => {
         });
         const response = await res.json();
         if (res.ok) {
-          console.log(response);
           setNik(response.result.nik);
           setName(response.result.full_name);
           setEmail(response.result.email);
@@ -113,86 +110,83 @@ const EditEmployee = () => {
     getDetail();
   }, [id]);
 
-  useEffect(() => {
-    const getTitle = async () => {
-      try {
-        const res = await fetch(`http://127.0.0.1:4000/employee/title`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
+  const getTitle = async () => {
+    try {
+      const res = await fetch(`http://127.0.0.1:4000/employee/title`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
+      const response = await res.json();
+      if (res.ok) {
+        const opt = response.result.map((item) => ({
+          value: item.title,
+          label: item.title,
+        }));
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(opt);
+          }, 2000);
         });
-        const response = await res.json();
-        if (res.ok) {
-          const opt = response.result.map((item) => ({
-            value: item.title,
-            label: item.title,
-          }));
-          setTitleOpt(opt);
-        }
-      } catch (error) {
-        console.log(error);
       }
-    };
-    getTitle();
-  }, []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  useEffect(() => {
-    const getBussines = async () => {
-      try {
-        const res = await fetch(`http://127.0.0.1:4000/employee/bussines`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
+  const getBussines = async () => {
+    try {
+      const res = await fetch(`http://127.0.0.1:4000/employee/bussines`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
+      const response = await res.json();
+      if (res.ok) {
+        const opt = response.result.map((item) => ({
+          value: item.bussines_unit,
+          label: item.bussines_unit,
+        }));
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(opt);
+          }, 2000);
         });
-        const response = await res.json();
-        if (res.ok) {
-          const opt = response.result.map((item) => ({
-            value: item.bussines_unit,
-            label: item.bussines_unit,
-          }));
-          setBussinesOpt(opt);
-        }
-      } catch (error) {
-        console.log(error);
       }
-    };
-    getBussines();
-  }, []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  useEffect(() => {
-    const getDepartment = async () => {
-      try {
-        const res = await fetch(`http://127.0.0.1:4000/employee/department`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
+  const getDepartment = async () => {
+    try {
+      const res = await fetch(`http://127.0.0.1:4000/employee/department`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
+      const response = await res.json();
+      if (res.ok) {
+        const opt = response.result.map((item) => ({
+          value: item.department,
+          label: item.department,
+        }));
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(opt);
+          }, 2000);
         });
-        const response = await res.json();
-        if (res.ok) {
-          const opt = response.result.map((item) => ({
-            value: item.department,
-            label: item.department,
-          }));
-          setDepartOpt(opt);
-        }
-      } catch (error) {
-        console.log(error);
       }
-    };
-    getDepartment();
-  }, []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -271,9 +265,10 @@ const EditEmployee = () => {
         <div className="form-group">
           <div className="mb-3">
             <label htmlFor="title">Title</label>
-            <CreatableSelect
-              isClearable
-              options={titleOpt}
+            <AsyncCreatableSelect
+              defaultOptions
+              cacheOptions
+              loadOptions={getTitle}
               value={title}
               onChange={(value) => setTitle(value)}
               id="title"
@@ -283,9 +278,10 @@ const EditEmployee = () => {
         <div className="form-group">
           <div className="mb-3">
             <label htmlFor="department">Department</label>
-            <CreatableSelect
-              isClearable
-              options={departOpt}
+            <AsyncCreatableSelect
+              defaultOptions
+              cacheOptions
+              loadOptions={getDepartment}
               value={department}
               onChange={(value) => setDepartment(value)}
               id="department"
@@ -295,9 +291,10 @@ const EditEmployee = () => {
         <div className="form-group">
           <div className="mb-3">
             <label htmlFor="bussines_unit">Bussines Unit</label>
-            <CreatableSelect
-              isClearable
-              options={bussinesOpt}
+            <AsyncCreatableSelect
+              defaultOptions
+              cacheOptions
+              loadOptions={getBussines}
               value={bussines}
               onChange={(value) => setBussines(value)}
               id="bussines_unit"

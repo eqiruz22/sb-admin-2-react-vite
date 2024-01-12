@@ -18,9 +18,6 @@ function ModalDetail(props) {
         },
       });
       const response = await res.json();
-      if (res.ok) {
-        console.log(response);
-      }
     } catch (error) {
       console.log(error);
     }

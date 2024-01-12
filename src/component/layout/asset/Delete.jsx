@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import Swal from "sweetalert2";
 import { Button } from "react-bootstrap";
+import useAuthContext from "../../hooks/useAuthContext";
 function ModalDelete(props) {
   const {
     isId,
@@ -14,7 +15,7 @@ function ModalDelete(props) {
     setPages,
     setCountData,
   } = props;
-
+  const { user, token } = useAuthContext();
   const handleDelete = (event) => {
     event.preventDefault();
     Swal.fire({
@@ -32,15 +33,14 @@ function ModalDelete(props) {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("token")
-              )}`,
+              Authorization: `Bearer ${token}`,
             },
-            body: {
-              userId: 1,
-            },
+            body: JSON.stringify({
+              userId: user.id,
+            }),
           });
           const response = await res.json();
+          console.log(res);
           if (res.ok) {
             await fetch(
               `http://127.0.0.1:4000/asset?page=${page}&size=${size}&query=${search}`,
@@ -48,29 +48,28 @@ function ModalDelete(props) {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${JSON.parse(
-                    localStorage.getItem("token")
-                  )}`,
+                  Authorization: `Bearer ${token}`,
                 },
               }
             )
               .then((res) => res.json())
               .then((res) => {
+                console.log(res);
                 setData(res.result.data);
                 setPage(res.result.paginate["page"]);
                 setSize(res.result.paginate["pageSize"]);
                 setPages(res.result.paginate["totalPage"]);
                 setCountData(res.result.paginate["assetCount"]);
+                Swal.fire({
+                  title: "Deleted!",
+                  text: res.result,
+                  icon: "success",
+                });
               });
-            Swal.fire({
-              title: "Deleted!",
-              text: response.result,
-              icon: "success",
-            });
           } else {
             Swal.fire({
               title: "Something wrong?",
-              text: response.result,
+              text: response.error || response.result,
               icon: "question",
             });
           }

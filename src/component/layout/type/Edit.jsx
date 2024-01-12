@@ -5,6 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
+import useAuthContext from "../../hooks/useAuthContext";
 
 function ModalEdit(props) {
   const {
@@ -20,6 +21,7 @@ function ModalEdit(props) {
   } = props;
   const [show, setShow] = useState(false);
   const [typename, setTypename] = useState("");
+  const { user, token } = useAuthContext();
   const handleClose = () => setShow(false);
 
   const getDetail = async () => {
@@ -60,20 +62,24 @@ function ModalEdit(props) {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             name: value["typename"],
+            userId: user.id,
           }),
         });
         const response = await res.json();
         if (res.ok) {
-          console.log(response);
           await fetch(
             `http://127.0.0.1:4000/type?page=${page}&size=${size}&query=${search}`,
             {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.parse(
+                  localStorage.getItem("token")
+                )}`,
               },
             }
           )
@@ -90,6 +96,12 @@ function ModalEdit(props) {
             title: "Success",
             text: response.result,
             icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: "something wrong?",
+            text: response.result || response.error,
+            icon: "question",
           });
         }
       } catch (error) {

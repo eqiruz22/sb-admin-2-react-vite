@@ -24,12 +24,10 @@ function Sidebar(props) {
         <a
           className="sidebar-brand d-flex align-items-center justify-content-center"
           href="#">
-          <div className="sidebar-brand-icon rotate-n-15">
+          {/* <div className="sidebar-brand-icon rotate-n-15">
             <i className="fas fa-laugh-wink" />
-          </div>
-          <div className="sidebar-brand-text mx-3">
-            SB Admin <sup>2</sup>
-          </div>
+          </div> */}
+          <div className="sidebar-brand-text mx-3">Asset</div>
         </a>
         {/* Divider */}
         <hr className="sidebar-divider my-0" />
@@ -85,6 +83,12 @@ function Sidebar(props) {
           <Link className="nav-link" to="/employee">
             <i className="fas fa-fw fa-solid fa-user-tie" />
             <span>Employee</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/log">
+            <i className="fas fa-fw fa-solid fa-list" />
+            <span>Activity Log</span>
           </Link>
         </li>
         {/* Divider */}

@@ -4,10 +4,12 @@ import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAuthContext from "../../hooks/useAuthContext";
 const CreateProduct = () => {
   const [manufac, setManufac] = useState("");
   const [type, setType] = useState("");
   const navigate = useNavigate();
+  const { user, token } = useAuthContext();
 
   let page = 1;
   let limit = 10;
@@ -37,21 +39,19 @@ const CreateProduct = () => {
         buy_date: value["buydate"],
         manufactureId: manufac["value"],
         typeId: type["value"],
+        userId: user.id,
       };
       try {
         const res = await fetch(`http://127.0.0.1:4000/product`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         });
         const response = await res.json();
         if (res.ok) {
-          console.log(response);
           Swal.fire({
             title: "success",
             text: response.result,

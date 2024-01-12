@@ -47,9 +47,7 @@ function Main() {
               toggleMinimize={toggleWhileMinimize}
             />
             <div className="container-fluid">
-              {/* Page Heading */}
-              {/* DataTales Example */}
-
+              {/* Main Content */}
               <dir>{<Outlet />}</dir>
             </div>
           </div>

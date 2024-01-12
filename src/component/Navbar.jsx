@@ -30,7 +30,7 @@ function Navbar(props) {
               aria-haspopup="true"
               aria-expanded={`${ariaToggle}`}>
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                {user.full_name}
+                {user && user.full_name}
               </span>
               <img className="img-profile rounded-circle" src={imgProfile} />
             </a>
@@ -40,14 +40,6 @@ function Navbar(props) {
               <a className="dropdown-item" href="#">
                 <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400" />
                 Profile
-              </a>
-              <a className="dropdown-item" href="#">
-                <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400" />
-                Settings
-              </a>
-              <a className="dropdown-item" href="#">
-                <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400" />
-                Activity Log
               </a>
               <div className="dropdown-divider" />
               <Logout />

@@ -4,6 +4,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
+import useAuthContext from "../../hooks/useAuthContext";
 
 function ModalCreate(props) {
   const {
@@ -17,6 +18,7 @@ function ModalCreate(props) {
     setCountData,
   } = props;
   const [show, setShow] = useState(false);
+  const { user, token } = useAuthContext();
 
   const handleClose = () => setShow(false);
 
@@ -38,17 +40,15 @@ function ModalCreate(props) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             name: value["manufacture"],
+            userId: user.id,
           }),
         });
         const response = await res.json();
         if (res.ok) {
-          console.log(response);
           resetForm();
           await fetch(
             `http://127.0.0.1:4000/manufacture?page=${page}&size=${size}&query=${search}`,
@@ -75,6 +75,12 @@ function ModalCreate(props) {
             title: "Success",
             text: response.result,
             icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: "something wrong?",
+            text: response.result || response.error,
+            icon: "question",
           });
         }
       } catch (error) {

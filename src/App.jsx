@@ -14,6 +14,7 @@ import CreateEmployee from "./component/layout/employee/Create.jsx";
 import EditEmployee from "./component/layout/employee/Edit.jsx";
 import CreateAsset from "./component/layout/asset/Create.jsx";
 import EditAsset from "./component/layout/asset/Edit.jsx";
+import MainLog from "./component/layout/log/Main.jsx";
 function App() {
   return (
     <Routes>
@@ -32,6 +33,7 @@ function App() {
         <Route path="/employee" element={<MainEmployee />} />
         <Route path="/employee/create" element={<CreateEmployee />} />
         <Route path="/employee/edit/:id" element={<EditEmployee />} />
+        <Route path="/log" element={<MainLog />} />
       </Route>
       <Route
         path="*"

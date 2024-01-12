@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import { formatOnlyDate } from "../../../helper/formatDate";
+import useAuthContext from "../../hooks/useAuthContext";
 const EditProduct = () => {
   const [manufac, setManufac] = useState("");
   const [type, setType] = useState("");
@@ -20,6 +21,7 @@ const EditProduct = () => {
   const [stats, setStats] = useState("");
   const [buy, setBuy] = useState("");
   const { id } = useParams();
+  const { user, token } = useAuthContext();
   let page = 1;
   let limit = 10;
 
@@ -34,7 +36,6 @@ const EditProduct = () => {
       });
       const response = await res.json();
       if (res.ok) {
-        console.log(response);
         setSn(response.result.data.serial_number);
         setHost(response.result.data.hostname);
         setSpec(response.result.data.spesification);
@@ -93,22 +94,19 @@ const EditProduct = () => {
         spesification: value["spesification"],
         warranty: value["warranty"],
         buy_date: value["buydate"],
+        userId: user.id,
       };
-      console.log(data);
       try {
         const res = await fetch(`http://127.0.0.1:4000/product/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         });
         const response = await res.json();
         if (res.ok) {
-          console.log(response);
           Swal.fire({
             title: "success",
             text: response.result,
@@ -143,7 +141,6 @@ const EditProduct = () => {
       );
       const response = await res.json();
       if (res.ok) {
-        console.log(response);
         const opt = response.result.data.map((item) => ({
           value: item.id,
           label: item.name,
@@ -176,7 +173,6 @@ const EditProduct = () => {
       );
       const response = await res.json();
       if (res.ok) {
-        console.log(response);
         const opt = response.result.data.map((item) => ({
           value: item.id,
           label: item.name,

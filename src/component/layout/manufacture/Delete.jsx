@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import Swal from "sweetalert2";
 import { Button } from "react-bootstrap";
+import useAuthContext from "../../hooks/useAuthContext";
 function ModalDelete(props) {
   const {
     isId,
@@ -15,6 +16,7 @@ function ModalDelete(props) {
     setCountData,
   } = props;
 
+  const { user, token } = useAuthContext();
   const handleDelete = (event) => {
     event.preventDefault();
     Swal.fire({
@@ -32,10 +34,11 @@ function ModalDelete(props) {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("token")
-              )}`,
+              Authorization: `Bearer ${token}`,
             },
+            body: JSON.stringify({
+              userId: user.id,
+            }),
           });
           const response = await res.json();
           if (res.ok) {
@@ -59,12 +62,18 @@ function ModalDelete(props) {
                 setPages(res.result.paginate["totalPage"]);
                 setCountData(res.result.paginate["manufactureCount"]);
               });
+            Swal.fire({
+              title: "Deleted!",
+              text: response.result,
+              icon: "success",
+            });
+          } else {
+            Swal.fire({
+              title: "something wrong?",
+              text: response.result || response.error,
+              icon: "question",
+            });
           }
-          Swal.fire({
-            title: "Deleted!",
-            text: response.result,
-            icon: "success",
-          });
         } catch (error) {
           console.log(error);
         }

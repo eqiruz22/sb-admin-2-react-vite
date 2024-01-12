@@ -5,6 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
+import useAuthContext from "../../hooks/useAuthContext";
 
 function ModalEdit(props) {
   const {
@@ -22,6 +23,7 @@ function ModalEdit(props) {
   const [username, setUsername] = useState("");
   const [fullname, setFullname] = useState("");
   const [role, setRole] = useState("");
+  const { user, token } = useAuthContext();
   const handleClose = () => setShow(false);
 
   const getDetail = async () => {
@@ -35,7 +37,6 @@ function ModalEdit(props) {
       });
       const response = await res.json();
       if (res.ok) {
-        console.log(response);
         setUsername(response?.result["username"]);
         setFullname(response?.result["full_name"]);
         setRole(response?.result["role"]);
@@ -71,15 +72,14 @@ function ModalEdit(props) {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             username: value["username"],
             password: value["password"],
             full_name: value["fullname"],
             role: value["role"],
+            userId: user.id,
           }),
         });
         const response = await res.json();
@@ -110,6 +110,12 @@ function ModalEdit(props) {
             title: "Success",
             text: response.result,
             icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: "something wrong?",
+            text: response.result || response.error,
+            icon: "question",
           });
         }
       } catch (error) {

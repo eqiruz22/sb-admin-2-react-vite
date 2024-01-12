@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import Swal from "sweetalert2";
 import { Button } from "react-bootstrap";
+import useAuthContext from "../../hooks/useAuthContext";
 function ModalDelete(props) {
   const {
     isId,
@@ -15,6 +16,7 @@ function ModalDelete(props) {
     setCountData,
   } = props;
 
+  const { user } = useAuthContext();
   const handleDelete = (event) => {
     event.preventDefault();
     Swal.fire({
@@ -36,6 +38,9 @@ function ModalDelete(props) {
                 localStorage.getItem("token")
               )}`,
             },
+            body: JSON.stringify({
+              userId: user.id,
+            }),
           });
           const response = await res.json();
           if (res.ok) {

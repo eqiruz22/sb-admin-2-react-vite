@@ -33,9 +33,8 @@ function Logout() {
       </button>
       <Modal show={show} onHide={handleClose} backdrop="static" centered>
         <Modal.Header>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Are you sure want leave this page?</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             No
