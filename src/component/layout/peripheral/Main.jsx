@@ -1,28 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Spinner } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { formatDate } from "../../../helper/formatDate";
 import debounce from "lodash/debounce";
 import "../../../../style/styles.css";
-const MainLog = () => {
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [page, setPage] = React.useState(1);
-  const [pages, setPages] = React.useState(0);
-  const [size, setSize] = React.useState(10);
-  const [countData, setCountData] = React.useState(0);
+import ModalCreate from "./Create";
+import ModalEdit from "./Edit";
+import ModalDelete from "./Delete";
+const MainPeripheral = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(0);
+  const [size, setSize] = useState(10);
+  const [countData, setCountData] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     debounceApi();
   }, [page, size, searchTerm]);
-  const getApi = React.useCallback(async () => {
+  const getApi = useCallback(async () => {
     setLoading(true);
     try {
       const api = await fetch(
-        `http://127.0.0.1:4000/log?page=${page}&size=${size}&query=${searchTerm}`,
+        `http://127.0.0.1:4000/peripheral?page=${page}&size=${size}&query=${searchTerm}`,
         {
           method: "GET",
           headers: {
@@ -35,12 +38,11 @@ const MainLog = () => {
       );
       const response = await api.json();
       if (api.ok) {
-        console.log(response);
         setData(response.result.data);
         setPage(response.result.paginate["page"]);
         setSize(response.result.paginate["pageSize"]);
         setPages(response.result.paginate["totalPage"]);
-        setCountData(response.result.paginate["logCount"]);
+        setCountData(response.result.paginate["peripheralCount"]);
         setLoading(false);
       }
     } catch (error) {
@@ -60,17 +62,27 @@ const MainLog = () => {
 
   const filterData = data.filter(
     (item) =>
-      item.user &&
-      item.user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.serial_number.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
     <>
-      <h1 className="h3 mb-2 text-gray-800">Log</h1>
+      <h1 className="h3 mb-2 text-gray-800">Peripheral</h1>
       <div className="card shadow mb-4">
         <div className="card-header py-3 d-flex justify-content-between">
           <h6 className="m-0 font-weight-bold text-primary mt-2">
-            DataTables Log
+            DataTables Peripheral
           </h6>
+          <ModalCreate
+            page={page}
+            size={size}
+            search={searchTerm}
+            setData={setData}
+            setPage={setPage}
+            setSize={setSize}
+            setPages={setPages}
+            setCountData={setCountData}
+          />
         </div>
         <div className="card-body">
           <div className="d-flex justify-content-end form-inline mb-3 navbar-search">
@@ -93,16 +105,19 @@ const MainLog = () => {
                 <tr>
                   <th>#</th>
                   <th>Name</th>
+                  <th>SN</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Location</th>
+                  <th>Status</th>
                   <th>Action</th>
-                  <th>Type</th>
-                  <th>Action At</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <>
                     <tr>
-                      <td className="text-center" colSpan={5}>
+                      <td className="text-center" colSpan={8}>
                         <Spinner animation="grow" role="status"></Spinner>
                       </td>
                     </tr>
@@ -113,15 +128,41 @@ const MainLog = () => {
                       filterData.map((item, index) => (
                         <tr key={index * 2}>
                           <td>{index + 1}</td>
-                          <td>{item.user && item.user.full_name}</td>
-                          <td>{item.action}</td>
-                          <td>{item.type}</td>
+                          <td>{item.name}</td>
+                          <td>{item.serial_number}</td>
                           <td>{formatDate(item.createdAt)}</td>
+                          <td>{formatDate(item.updatedAt)}</td>
+                          <td>{item.location}</td>
+                          <td>{item.statsasset && item.statsasset.name}</td>
+                          <td>
+                            <ModalEdit
+                              isId={item.id}
+                              page={page}
+                              size={size}
+                              search={searchTerm}
+                              setData={setData}
+                              setPage={setPage}
+                              setSize={setSize}
+                              setPages={setPages}
+                              setCountData={setCountData}
+                            />
+                            <ModalDelete
+                              isId={item.id}
+                              page={page}
+                              size={size}
+                              search={searchTerm}
+                              setData={setData}
+                              setPage={setPage}
+                              setSize={setSize}
+                              setPages={setPages}
+                              setCountData={setCountData}
+                            />
+                          </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td className="text-center" colSpan={5}>
+                        <td className="text-center" colSpan={8}>
                           No data found...
                         </td>
                       </tr>
@@ -131,7 +172,7 @@ const MainLog = () => {
               </tbody>
             </table>
             <div className="d-sm-flex align-items-center justify-content-between">
-              <p>Total Log : {countData}</p>
+              <p>Total Peripheral : {countData}</p>
               <nav aria-label="Page navigation example" key={countData}>
                 <ReactPaginate
                   previousLabel={"<<"}
@@ -155,4 +196,4 @@ const MainLog = () => {
   );
 };
 
-export default MainLog;
+export default MainPeripheral;

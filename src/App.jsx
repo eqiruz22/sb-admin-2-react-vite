@@ -15,6 +15,7 @@ import EditEmployee from "./component/layout/employee/Edit.jsx";
 import CreateAsset from "./component/layout/asset/Create.jsx";
 import EditAsset from "./component/layout/asset/Edit.jsx";
 import MainLog from "./component/layout/log/Main.jsx";
+import MainPeripheral from "./component/layout/peripheral/Main.jsx";
 function App() {
   return (
     <Routes>
@@ -34,6 +35,7 @@ function App() {
         <Route path="/employee/create" element={<CreateEmployee />} />
         <Route path="/employee/edit/:id" element={<EditEmployee />} />
         <Route path="/log" element={<MainLog />} />
+        <Route path="/peripheral" element={<MainPeripheral />} />
       </Route>
       <Route
         path="*"

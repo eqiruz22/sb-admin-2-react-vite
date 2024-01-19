@@ -76,6 +76,9 @@ function Sidebar(props) {
               <Link className="collapse-item" to="/asset">
                 Asset
               </Link>
+              <Link className="collapse-item" to="/peripheral">
+                Peripheral
+              </Link>
             </div>
           </div>
         </li>
